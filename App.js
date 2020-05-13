@@ -47,7 +47,7 @@ export default function App() {
       return;
     }
 
-    const pickerResult = await ImagePicker.launchImageLibraryAsync({base64: true});
+    const pickerResult = await ImagePicker.launchImageLibraryAsync();
     
     if (pickerResult.cancelled === true) {
       
@@ -60,15 +60,31 @@ export default function App() {
     // } else {
     //   setSelectedImage({ localUri: pickerResult.uri, remoteUri: null });
     // } 
-    handleUpload(pickerResult.base64).then(rs=> console.log(rs));
+    handleUpload(pickerResult.uri)
+      .then(async (rs)=> {
+        const text = await rs.text();
+        console.log('text', text);
+      });
+      //.catch(err=> 'erroasdfd');
   };
 
   const handleUpload = async(uri) => {
-    /// console.log(uri);
-    const uploadUrl = 'http://8742c44a.ngrok.io/api/upload-avatar';
+    // console.log(uri);
+
+    // try {
+    //   let result = await fetch(uri);
+    //   console.log(await result.blob());
+    // } catch(ex) {
+    //   console.log('err', ex);
+    // }
+    
+
+    // const uploadUrl = 'http://192.168.100.9:3000/api/upload-avatar';
+    const uploadUrl = 'https://api.anonymousfiles.io/';
     const uriParts = uri.split('.');
     const fileType = uriParts[uriParts.length - 1];
-    const payloadKey = 'avatar' // Define PayloadKey here Ex. 'file'
+    //const payloadKey = 'avatar' // Define PayloadKey here Ex. 'file'
+    const payloadKey = 'file';
     const method = 'POST';
     const formData = new FormData();
     formData.append(payloadKey, {
